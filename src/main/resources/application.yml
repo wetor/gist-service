@@ -1,0 +1,95 @@
+#*******************************************************************************
+# Copyright (c) 2017 AT&T Intellectual Property, [http://www.att.com]
+#
+# SPDX-License-Identifier:   MIT
+#
+#*******************************************************************************
+server:
+  port: 13020
+
+management:
+  port: 13021
+  security:
+    enabled: true
+  context_path: /manage
+
+info:
+  version: 0.1.0
+  stage: dev
+
+spring:
+  jackson:
+    serialization:
+      write_dates_as_timestamps: false
+  application:
+    name: gist-service
+  cloud:
+    config:
+      enabled: false
+
+
+gists:
+  root: /Users/wetor/rcloud-gist-service/gists/
+  lockTimeout: 30
+  security: default
+  access_token_param: access_token
+  client_id_param: client_id
+  mediatypes:
+     - application/vnd.github.beta+json
+     - application/vnd.github.beta
+     - application/vnd.github.v3+json
+     - application/vnd.github.v3
+  route:
+    redirect:
+      from: '/login/*'
+      to: http://example.com
+      copyparams: true
+  users:
+    collaborations: {}
+
+
+  
+caches:
+  - 
+    name: 'sessionkeys'
+    evictionPolicy: LRU
+    ttl: 60
+    maxSize: 100
+    maxIdleSeconds: 60
+  - 
+    name: 'gists'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300
+  - 
+    name: 'comments'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300
+  - 
+    name: 'commentstore'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300
+  - 
+    name: 'metadatatore'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300
+  - 
+    name: 'historystore'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300
+  - 
+    name: 'filecontentcache'
+    evictionPolicy: LRU
+    ttl: 300
+    maxSize: 200
+    maxIdleSeconds: 300    
+    
