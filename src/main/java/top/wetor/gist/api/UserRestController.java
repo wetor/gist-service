@@ -6,21 +6,19 @@
 *******************************************************************************/
 package top.wetor.gist.api;
 
+import org.springframework.web.bind.annotation.*;
 import top.wetor.gist.model.GistIdentity;
 import top.wetor.gist.model.GistResponse;
 import top.wetor.gist.model.User;
 import top.wetor.gist.repository.GistRepositoryService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@CrossOrigin(origins = "http://0.0.0.0:8080")
 @RestController()
-@RequestMapping(value = "/user", produces = {
+@RequestMapping(value = "/users", produces = {
 		MediaType.APPLICATION_JSON_VALUE,
 		"application/vnd.github.beta+json",
 		"application/vnd.github.v3+json"
@@ -37,7 +35,12 @@ public class UserRestController {
 		response.setLogin(username);
 		return response;
 	}
-	
+
+	/**
+	 * 获取user的所有gist
+	 * @param username username
+	 * @return gist列表
+	 */
 	@RequestMapping(value = "/{username}/gists", method = RequestMethod.GET)
 	public List<GistResponse> getUsersPublicGists(@PathVariable("username") String username) {
 

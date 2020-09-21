@@ -17,12 +17,12 @@ public class CustomLock implements Lock {
 
     @Override
     public boolean tryLock() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean tryLock(long time, TimeUnit unit) throws InterruptedException {
-        return false;
+        return true;
     }
 
     @Override

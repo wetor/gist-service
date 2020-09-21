@@ -17,6 +17,7 @@ import org.ajoberstar.grgit.operation.ShowOp;
 import org.eclipse.jgit.api.errors.GitAPIException;
 import org.joda.time.DateTime;
 import org.joda.time.DateTimeZone;
+import top.wetor.gist.repository.GistDiff;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -92,6 +93,7 @@ public class GitHistoryOperation implements Callable<List<GistHistory>> {
 	private List<GistHistory> calculateHistory(Repository repository, List<Commit> commits) {
 		List<GistHistory> histories = new ArrayList<>();
 		boolean recordHistory = commitId == null;
+		Commit lastCommit = null;
 		for (Commit logCommit : commits) {
 			if(this.commitId == null) {
 				this.commitId = logCommit.getId();
@@ -106,6 +108,10 @@ public class GitHistoryOperation implements Callable<List<GistHistory>> {
 						histories.addAll(cachedHistory);
 						break;
 					}
+					if(lastCommit!=null)
+					{
+						Test(repository,logCommit,lastCommit);
+					}
 					GistHistory history = create(repository, logCommit);
 					histories.add(history);
 					
@@ -113,11 +119,15 @@ public class GitHistoryOperation implements Callable<List<GistHistory>> {
 			} catch (GitAPIException | IOException e) {
 				logger.error(String.format("Could not extract diff of commit %s.", logCommit.getId()), e);
 			}
+			lastCommit = logCommit;
 		}
 		this.historyStore.save(this.commitId, histories);
 		return histories;
 	}
 
+	private void Test(Repository repository, Commit oldCommit,Commit newCommit) {
+		System.out.println(GistDiff.diffCommit(repository.getJgit().getRepository(),oldCommit.getId(),newCommit.getId()));
+	}
 
 	private GistHistory create(Repository repository, Commit logCommit) throws GitAPIException, IOException {
 		ShowOp showOp = new ShowOp(repository);
@@ -131,6 +141,8 @@ public class GitHistoryOperation implements Callable<List<GistHistory>> {
 		return history;
 	}
 
+
+	// TODO: diff
 	private void setChanges(GistHistory history, CommitDiff diff) {
 		GitChangeStatus status = new GitChangeStatus();
 		status.setAdditions(diff.getAdded().size());

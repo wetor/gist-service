@@ -6,6 +6,19 @@
 *******************************************************************************/
 package top.wetor.gist.repository.git;
 
+import org.eclipse.jgit.api.Git;
+import org.eclipse.jgit.api.errors.GitAPIException;
+import org.eclipse.jgit.diff.DiffEntry;
+import org.eclipse.jgit.diff.DiffFormatter;
+import org.eclipse.jgit.lib.ObjectReader;
+import org.eclipse.jgit.lib.Repository;
+import org.eclipse.jgit.revwalk.RevCommit;
+import org.eclipse.jgit.revwalk.RevTree;
+import org.eclipse.jgit.revwalk.RevWalk;
+import org.eclipse.jgit.treewalk.AbstractTreeIterator;
+import org.eclipse.jgit.treewalk.CanonicalTreeParser;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import top.wetor.gist.CustomLock;
 import top.wetor.gist.model.*;
 import top.wetor.gist.repository.*;
@@ -20,6 +33,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -271,6 +285,51 @@ public class GitGistRepositoryService implements GistRepositoryService {
         } finally {
             lock.unlock();
         }
+    }
+    @Override
+    public String getDiff(String gistId,String oldCommitId,String newCommitId){
+        return "";
+//        try {
+//            File repositoryFolder = getAndValidateRepositoryFolder(gistId);
+//            GistRepository repository = repositoryFactory.getRepository(repositoryFolder);
+//            Git gitCommand = new Git(repository);
+//            List<DiffEntry> diffEntries = listDiff(repository, gitCommand, oldCommitId, newCommitId);
+//            StringBuilder sb = new StringBuilder();
+//            for (DiffEntry entry : diffEntries) {
+//                sb.append(entry.getChangeType().toString())
+//                        .append(" : ")
+//                        .append(
+//                                entry.getOldPath().equals(entry.getNewPath()) ? entry.getNewPath() : entry.getOldPath()
+//                                        + " -> " + entry.getNewPath()
+//                        );
+//
+//                OutputStream output = new OutputStream() {
+//                    StringBuilder builder = new StringBuilder();
+//
+//                    @Override
+//                    public void write(int b) throws IOException {
+//                        builder.append((char) b);
+//                    }
+//
+//                    public String toString() {
+//                        return this.builder.toString();
+//                    }
+//                };
+//
+//                try (DiffFormatter formatter = new DiffFormatter(output)) {
+//                    formatter.setRepository(repository);
+//                    formatter.format(entry);
+//                }
+//                sb.append("\n").append(output.toString());
+//            }
+//            return sb.toString();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//            return "";
+//        } catch (GitAPIException e) {
+//            e.printStackTrace();
+//            return "";
+//        }
     }
 
     private Lock acquireGistLock(String gistId) {

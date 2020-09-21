@@ -29,6 +29,7 @@ import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
 
+@CrossOrigin(origins = "http://0.0.0.0:8080")
 @RestController()
 @RequestMapping(value = "/gists", produces = { MediaType.APPLICATION_JSON_VALUE, "application/vnd.github.beta+json",
         "application/vnd.github.v3+json" })
@@ -46,6 +47,11 @@ public class GistRestController {
     @Autowired
     private CollaborationDataStore collaborationDataStore;
 
+    /**
+     * 通过user获取gist列表
+     * @param activeUser user
+     * @return gist列表
+     */
     @RequestMapping(method = RequestMethod.GET)
     public List<GistResponse> listAllGistsForUser(User activeUser) {
         List<GistResponse> responses = repository.listGists(activeUser);
@@ -53,6 +59,11 @@ public class GistRestController {
         return responses;
     }
 
+    /**
+     * 获取user的公开gist
+     * @param activeUser user
+     * @return gist列表
+     */
     @RequestMapping(value = "/public", method = RequestMethod.GET)
     public List<GistResponse> listAllPublicGists(User activeUser) {
         List<GistResponse> responses = repository.listPublicGists(activeUser);
@@ -60,6 +71,12 @@ public class GistRestController {
         return responses;
     }
 
+    /**
+     * 通过gistId获取gist
+     * @param gistId gistId
+     * @param activeUser user
+     * @return gist
+     */
     @RequestMapping(value = "/{gistId}", method = RequestMethod.GET)
     @Cacheable(value = "gists", key = "#gistId")
     public GistResponse getGist(@PathVariable("gistId") String gistId, User activeUser) {
@@ -68,6 +85,13 @@ public class GistRestController {
         return response;
     }
 
+    /**
+     * 获取gits的指定commit
+     * @param gistId gistId
+     * @param commitId commitId
+     * @param activeUser user
+     * @return commit
+     */
     @RequestMapping(value = "/{gistId}/{commitId}", method = RequestMethod.GET)
     @Cacheable(value = "gists", key = "{ #gistId, #commitId }")
     public GistResponse getGistAtCommit(@PathVariable("gistId") String gistId,
@@ -78,6 +102,13 @@ public class GistRestController {
         return response;
     }
 
+    /**
+     * 需要登录。创建gist
+     * @param request gist数据
+     * @param httpRequest request
+     * @param activeUser user
+     * @return gist
+     */
     @RequestMapping(method = RequestMethod.POST)
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @ResponseStatus(HttpStatus.CREATED)
@@ -89,6 +120,12 @@ public class GistRestController {
         return response;
     }
 
+    /**
+     * 获取fork列表
+     * @param gistId gistId
+     * @param activeUser user
+     * @return fork列表
+     */
     @RequestMapping(value = "/{gistId}/forks", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     public List<Fork> getForks(@PathVariable("gistId") String gistId, User activeUser) {
@@ -100,6 +137,13 @@ public class GistRestController {
     /*
      * Legacy github mapping
      */
+
+    /**
+     * 映射github 获取fork列表
+     * @param gistId gistId
+     * @param activeUser user
+     * @return fork列表
+     */
     @RequestMapping(value = "/{gistId}/fork", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @Deprecated
@@ -107,6 +151,12 @@ public class GistRestController {
         return this.getForks(gistId, activeUser);
     }
 
+    /**
+     * 需要登录。fork指定gist
+     * @param gistId gistId
+     * @param activeUser user
+     * @return fork后的gist
+     */
     @RequestMapping(value = "/{gistId}/forks", method = RequestMethod.POST)
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @ResponseStatus(HttpStatus.CREATED)
@@ -131,6 +181,13 @@ public class GistRestController {
     /*
      * Legacy github mapping
      */
+
+    /**
+     * 映射github 需要登录。fork指定gist
+     * @param gistId gistId
+     * @param activeUser user
+     * @return fork后的gist
+     */
     @RequestMapping(value = "/{gistId}/fork", method = RequestMethod.POST)
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @ResponseStatus(HttpStatus.CREATED)
@@ -140,6 +197,13 @@ public class GistRestController {
         return this.forkGist(gistId, activeUser);
     }
 
+    /**
+     * 需要登录。修改gist
+     * @param gistId gistId
+     * @param request 修改内容
+     * @param activeUser user
+     * @return 修改后的gist
+     */
     @RequestMapping(value = "/{gistId}", method = RequestMethod.PATCH)
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @CachePut(cacheNames = "gists", key = "#gistId")
@@ -149,6 +213,11 @@ public class GistRestController {
         return response;
     }
 
+    /**
+     * 需要登录。删除gist
+     * @param gistId gistId
+     * @param activeUser user
+     */
     @RequestMapping(value = "/{gistId}", method = RequestMethod.DELETE)
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @ResponseStatus(HttpStatus.NO_CONTENT)
@@ -157,6 +226,11 @@ public class GistRestController {
         repository.deleteGist(gistId, activeUser);
     }
 
+    /**
+     * 处理多个gistResponse，添加url、comment、fork等信息
+     * @param gistResponses gist列表
+     * @param activeUser user
+     */
     private void decorateGistResponse(Collection<GistResponse> gistResponses, User activeUser) {
         if (gistResponses != null) {
             for (GistResponse gistResponse : gistResponses) {
@@ -165,6 +239,11 @@ public class GistRestController {
         }
     }
 
+    /**
+     * 处理单个gistResponse，添加url、comment、fork等信息
+     * @param gistResponse gist
+     * @param activeUser user
+     */
     private void decorateGistResponse(GistResponse gistResponse, User activeUser) {
         if (gistResponse != null) {
             gistResponse.setUrl(resolver.getGistUrl(gistResponse.getId(), activeUser));
@@ -179,13 +258,10 @@ public class GistRestController {
         }
     }
 
-    private void decorateForksResponse(List<Fork> forks, User activeUser) {
-        for (Fork fork : forks) {
-            String forkUrl = resolver.getGistUrl(fork.getId(), activeUser);
-            fork.setUrl(forkUrl);
-        }
-    }
-
+    /**
+     * 再次处理gistResponse，添加所有者以及登录信息
+     * @param gistResponse gist
+     */
     private void decorateCollaborators(GistResponse gistResponse) {
         if (gistResponse.getOwner() != null && StringUtils.isNotBlank(gistResponse.getOwner().getLogin())) {
             Collection<String> collaboratorNames = collaborationDataStore
@@ -197,6 +273,18 @@ public class GistRestController {
                 collaboratorIdentities.add(collaboratorIdentity);
             }
             gistResponse.setCollaborators(collaboratorIdentities);
+        }
+    }
+
+    /**
+     * 处理fork列表，添加url等信息
+     * @param forks fork列表
+     * @param activeUser user
+     */
+    private void decorateForksResponse(List<Fork> forks, User activeUser) {
+        for (Fork fork : forks) {
+            String forkUrl = resolver.getGistUrl(fork.getId(), activeUser);
+            fork.setUrl(forkUrl);
         }
     }
 

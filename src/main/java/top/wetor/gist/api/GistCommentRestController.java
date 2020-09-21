@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Collection;
 import java.util.List;
 
+@CrossOrigin(origins = "http://0.0.0.0:8080")
 @RestController()
 @RequestMapping(value = "/gists/{gistId}/comments", produces={
 		MediaType.APPLICATION_JSON_VALUE,
@@ -33,6 +34,12 @@ public class GistCommentRestController {
 	@Autowired
 	private ControllerUrlResolver resolver;
 
+	/**
+	 * 获取gistId的所有comment
+	 * @param gistId gistId
+	 * @param activeUser user
+	 * @return comment列表
+	 */
 	@RequestMapping(method= RequestMethod.GET)
 	@Cacheable(key="#gistId")
 	public List<GistCommentResponse> getComments(@PathVariable("gistId") String gistId, User activeUser) {
@@ -41,6 +48,13 @@ public class GistCommentRestController {
 		return comments;
 	}
 
+	/**
+	 * 获取指定comment
+	 * @param gistId gistId
+	 * @param commentId commentId
+	 * @param activeUser user
+	 * @return comment
+	 */
 	@RequestMapping(value="/{commentId}", method= RequestMethod.GET)
 	@Cacheable(key="{#gistId, #commentId}")
 	public GistCommentResponse getComment(@PathVariable("gistId") String gistId, @PathVariable("commentId") long commentId, User activeUser) {
@@ -49,6 +63,13 @@ public class GistCommentRestController {
 		return response;
 	}
 
+	/**
+	 * 需要登录。发表comment
+	 * @param gistId gistId
+	 * @param comment comment内容
+	 * @param activeUser user
+	 * @return comment
+	 */
 	@RequestMapping(method= RequestMethod.POST)
 	//@PreAuthorize(GistRestController.USER_ROLE_AUTHORITY)
 	@ResponseStatus( HttpStatus.CREATED )
@@ -59,6 +80,14 @@ public class GistCommentRestController {
 		return response;
 	}
 
+	/**
+	 * 需要登录。修改comment
+	 * @param gistId gistId
+	 * @param commentId commentId
+	 * @param comment comment内容
+	 * @param activeUser user
+	 * @return comment
+	 */
 	@RequestMapping(value="/{commentId}", method= RequestMethod.PATCH)
 	//@PreAuthorize(GistRestController.USER_ROLE_AUTHORITY)
 	@CachePut(key="{#gistId, #commentId}")
@@ -69,6 +98,12 @@ public class GistCommentRestController {
 		return response;
 	}
 
+	/**
+	 * 需要登录。删除comment
+	 * @param gistId gistId
+	 * @param commentId commentId
+	 * @param activeUser user
+	 */
 	@RequestMapping(value="/{commentId}", method= RequestMethod.DELETE)
 	//@PreAuthorize(GistRestController.USER_ROLE_AUTHORITY)
 	@ResponseStatus( HttpStatus.NO_CONTENT )
@@ -77,6 +112,12 @@ public class GistCommentRestController {
 		repository.deleteComment(gistId, commentId, activeUser);
 	}
 
+	/**
+	 * 处理多个gistCommentResponse，添加url等信息
+	 * @param gistCommentResponses gistCommentResponse列表
+	 * @param gistId gistId
+	 * @param activeUser user
+	 */
 	private void decorateUrls(Collection<GistCommentResponse> gistCommentResponses, String gistId, User activeUser) {
 		if(gistCommentResponses != null) {
 			for(GistCommentResponse gistResponse: gistCommentResponses) {
@@ -85,6 +126,12 @@ public class GistCommentRestController {
 		}
 	}
 
+	/**
+	 * 处理单个gistCommentResponse，添加url等信息
+	 * @param gistCommentResponse comment
+	 * @param gistId gistId
+	 * @param activeUser user
+	 */
 	private void decorateUrls(GistCommentResponse gistCommentResponse, String gistId, User activeUser) {
 		if(gistCommentResponse != null) {
 			gistCommentResponse.setUrl(resolver.getCommentUrl(gistId, gistCommentResponse.getId(), activeUser));
