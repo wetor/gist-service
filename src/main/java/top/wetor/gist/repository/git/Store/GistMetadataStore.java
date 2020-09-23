@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import top.wetor.gist.repository.GistError;
@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
+import top.wetor.gist.repository.git.GistMetadata;
 
 import java.io.File;
 import java.io.IOException;

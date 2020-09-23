@@ -4,21 +4,8 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Service;
 
-import org.eclipse.jgit.api.Git;
-import org.eclipse.jgit.api.errors.GitAPIException;
-import org.eclipse.jgit.diff.DiffEntry;
-import org.eclipse.jgit.diff.DiffFormatter;
-import org.eclipse.jgit.lib.ObjectReader;
-import org.eclipse.jgit.lib.Repository;
-import org.eclipse.jgit.revwalk.RevCommit;
-import org.eclipse.jgit.revwalk.RevTree;
-import org.eclipse.jgit.revwalk.RevWalk;
-import org.eclipse.jgit.treewalk.AbstractTreeIterator;
-import org.eclipse.jgit.treewalk.CanonicalTreeParser;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import top.wetor.gist.CustomLock;
 import top.wetor.gist.model.*;
 import top.wetor.gist.repository.*;
@@ -30,16 +17,18 @@ import org.apache.commons.io.filefilter.TrueFileFilter;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.wetor.gist.repository.git.*;
+import top.wetor.gist.repository.git.StorageLocator.AsymetricFourFolderRepositoryStorageLocator;
+import top.wetor.gist.repository.git.StorageLocator.RepositoryStorageLocator;
+import top.wetor.gist.repository.git.StorageLocator.SymetricFourPartRepositoryStorageLocator;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
-import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 
 public class GitGistRepositoryService implements GistRepositoryService {
@@ -286,6 +275,35 @@ public class GitGistRepositoryService implements GistRepositoryService {
             lock.unlock();
         }
     }
+
+    @Override
+    public List<GistHistory> getCommits(String gistId, User user) {
+        Lock lock = acquireGistLock(gistId);
+        try {
+            File repositoryFolder = getAndValidateRepositoryFolder(gistId);
+            GistRepository gistRepository = repositoryFactory.getRepository(repositoryFolder);
+            this.ensureReadable(gistRepository, user);
+            GistCommitRepository repository = gistRepository.getCommitRepository();
+            return repository.getCommits(gistId, user);
+        } finally {
+            lock.unlock();
+        }
+    }
+
+    @Override
+    public GistHistory getCommit(String gistId, String commitId, User user) {
+        Lock lock = acquireGistLock(gistId);
+        try {
+            File repositoryFolder = getAndValidateRepositoryFolder(gistId);
+            GistRepository gistRepository = repositoryFactory.getRepository(repositoryFolder);
+            this.ensureReadable(gistRepository, user);
+            GistCommitRepository repository = gistRepository.getCommitRepository();
+            return repository.getCommit(gistId, commitId, user);
+        } finally {
+            lock.unlock();
+        }
+    }
+
     @Override
     public String getDiff(String gistId,String oldCommitId,String newCommitId){
         return "";

@@ -4,9 +4,10 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.StorageLocator;
 
 import com.google.common.base.Splitter;
+import top.wetor.gist.repository.git.StorageLocator.RepositoryStorageLocator;
 
 import java.io.File;
 

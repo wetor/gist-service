@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Operation;
 
 import org.eclipse.jgit.api.Git;
 import org.eclipse.jgit.api.GitCommand;

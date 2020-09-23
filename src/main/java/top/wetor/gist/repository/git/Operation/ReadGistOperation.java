@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Operation;
 
 import top.wetor.gist.model.*;
 import top.wetor.gist.repository.GistCommentRepository;
@@ -29,6 +29,12 @@ import org.eclipse.jgit.treewalk.TreeWalk;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import top.wetor.gist.repository.git.Cache.FileContentCache;
+import top.wetor.gist.repository.git.Cache.HistoryCache;
+import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.repository.git.GitGistRepository;
+import top.wetor.gist.repository.git.RepositoryLayout;
+import top.wetor.gist.repository.git.Store.MetadataStore;
 
 import javax.activation.MimetypesFileTypeMap;
 import java.io.File;

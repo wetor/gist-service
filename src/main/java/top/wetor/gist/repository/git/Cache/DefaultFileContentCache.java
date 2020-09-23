@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Cache;
 
 import top.wetor.gist.model.FileContent;
 import org.springframework.cache.annotation.CachePut;

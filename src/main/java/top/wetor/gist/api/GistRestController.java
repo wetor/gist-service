@@ -8,7 +8,7 @@ package top.wetor.gist.api;
 
 import top.wetor.gist.model.*;
 import top.wetor.gist.repository.GistRepositoryService;
-import top.wetor.gist.repository.git.CollaborationDataStore;
+import top.wetor.gist.repository.git.Store.CollaborationDataStore;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
@@ -102,6 +103,32 @@ public class GistRestController {
         return response;
     }
 
+
+    /**
+     * 获取gist的commit列表
+     * @param gistId gistId
+     * @param activeUser user
+     * @return commit列表
+     */
+    @RequestMapping(value = "/{gistId}/commits", method = RequestMethod.GET)
+    @Cacheable(value = "commits", key = "{ #gistId}")
+    public List<GistHistory> getCommits(@PathVariable("gistId") String gistId, User activeUser){
+
+        return new ArrayList<GistHistory>();
+    }
+    /**
+     * 获取两个commit的diff
+     * @param gistId gistId
+     * @param newCommitId commit1
+     * @param oldCommitId commit2
+     * @return diff
+     */
+    @RequestMapping(value = "/{gistId}/diff", method = RequestMethod.GET)
+    @Cacheable(value = "gists", key = "{ #gistId, #newCommitId, #oldCommitId}")
+    public String getCommitDiff(@PathVariable("gistId") String gistId,String newCommitId,String oldCommitId){
+
+        return "";
+    }
     /**
      * 需要登录。创建gist
      * @param request gist数据
@@ -249,6 +276,7 @@ public class GistRestController {
             gistResponse.setUrl(resolver.getGistUrl(gistResponse.getId(), activeUser));
             gistResponse.setCommentsUrl(resolver.getCommentsUrl(gistResponse.getId(), activeUser));
             gistResponse.setForksUrl(resolver.getForksUrl(gistResponse.getId(), activeUser));
+            gistResponse.setCommitsUrl(resolver.getCommitsUrl(gistResponse.getId(), activeUser));
             if (gistResponse.getForkOf() != null) {
                 Fork forkOf = gistResponse.getForkOf();
                 String url = resolver.getGistUrl(forkOf.getId(), activeUser);

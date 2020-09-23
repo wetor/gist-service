@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Operation;
 
 import top.wetor.gist.model.*;
 import top.wetor.gist.repository.GistError;
@@ -27,6 +27,7 @@ import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
+import top.wetor.gist.repository.git.*;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,7 +46,7 @@ public class CreateOrUpdateGistOperation extends ReadGistOperation {
     private GistResponse preChangeResponse;
 
     public CreateOrUpdateGistOperation(RepositoryLayout layout, String gistId, GistRequest gistRequest,
-            User user) {
+                                       User user) {
         super(layout, gistId, user);
         this.gistRequest = gistRequest;
     }

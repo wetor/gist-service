@@ -4,12 +4,13 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Factory;
 
 import top.wetor.gist.repository.GistRepository;
 import top.wetor.gist.repository.GistRepositoryFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import top.wetor.gist.repository.git.GitGistRepository;
 
 import java.io.File;
 

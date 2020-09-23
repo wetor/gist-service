@@ -6,6 +6,7 @@
 *******************************************************************************/
 package top.wetor.gist.repository;
 
+import top.wetor.gist.model.GistHistory;
 import top.wetor.gist.model.GistRequest;
 import top.wetor.gist.model.GistResponse;
 import top.wetor.gist.model.User;
@@ -36,6 +37,8 @@ public interface GistRepository {
 	GistMetadata getMetadata();
 	
 	GistCommentRepository getCommentRepository();
+
+	GistCommitRepository getCommitRepository();
 	
 	
 }

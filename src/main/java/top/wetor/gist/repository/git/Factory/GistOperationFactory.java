@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import top.wetor.gist.model.FileContent;
@@ -16,6 +16,18 @@ import top.wetor.gist.repository.GistRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
+import top.wetor.gist.repository.git.*;
+import top.wetor.gist.repository.git.Cache.FileContentCache;
+import top.wetor.gist.repository.git.Cache.HistoryCache;
+import top.wetor.gist.repository.git.GitGistCommentRepository;
+import top.wetor.gist.repository.git.Operation.CreateOrUpdateGistOperation;
+import top.wetor.gist.repository.git.Operation.ForkGistOperation;
+import top.wetor.gist.repository.git.Operation.InitRepositoryLayoutOperation;
+import top.wetor.gist.repository.git.Operation.ReadGistOperation;
+import top.wetor.gist.repository.git.Store.CommentStore;
+import top.wetor.gist.repository.git.Store.GistCommentStore;
+import top.wetor.gist.repository.git.Store.GistMetadataStore;
+import top.wetor.gist.repository.git.Store.MetadataStore;
 
 import java.io.File;
 import java.util.LinkedList;
@@ -103,7 +115,7 @@ public class GistOperationFactory {
     }
 
     public ReadGistOperation getReadOperation(RepositoryLayout layout, String gistId, User user,
-            String commitId) {
+                                              String commitId) {
         GistCommentRepository repository = new GitGistCommentRepository(layout.getCommentsFile(), commentStore);
         ReadGistOperation op = new ReadGistOperation(layout, gistId, user);
         if (!StringUtils.isEmpty(commitId)) {
@@ -118,7 +130,7 @@ public class GistOperationFactory {
     }
 
     public CreateOrUpdateGistOperation getCreateOrUpdateOperation(RepositoryLayout layout, String gistId,
-            GistRequest gistRequest, User user) {
+                                                                  GistRequest gistRequest, User user) {
         GistCommentRepository repository = new GitGistCommentRepository(layout.getCommentsFile(), commentStore);
         CreateOrUpdateGistOperation op = new CreateOrUpdateGistOperation(layout, gistId, gistRequest, user);
         op.setCommentRepository(repository);
@@ -129,7 +141,7 @@ public class GistOperationFactory {
     }
 
     public ForkGistOperation getForkOperation(RepositoryLayout layout, String gistId, GistRepository originalRepository,
-            GistRepository newRepository, User user) {
+                                              GistRepository newRepository, User user) {
         GistCommentRepository repository = new GitGistCommentRepository(layout.getCommentsFile(), commentStore);
         ForkGistOperation op = new ForkGistOperation(layout, originalRepository, newRepository, gistId, user);
         op.setCommentRepository(repository);

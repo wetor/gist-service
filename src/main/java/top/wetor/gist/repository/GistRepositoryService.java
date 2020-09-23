@@ -36,6 +36,10 @@ public interface GistRepositoryService {
 
 	public void deleteComment(String gistId, long commentId, User activeUser);
 
+	public List<GistHistory> getCommits(String gistId, User activeUser);
+
+	public GistHistory getCommit(String gistId, String commitId, User activeUser);
+
 	public GistResponse forkGist(String gistId, User activeUser);
 	
 	public List<Fork> getForks(String gistId, User activeUser);

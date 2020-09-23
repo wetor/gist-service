@@ -11,9 +11,17 @@ import top.wetor.gist.model.GistRequest;
 import top.wetor.gist.model.GistResponse;
 import top.wetor.gist.model.User;
 import top.wetor.gist.repository.GistCommentRepository;
+import top.wetor.gist.repository.GistCommitRepository;
 import top.wetor.gist.repository.GistRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.wetor.gist.repository.git.Factory.GistOperationFactory;
+import top.wetor.gist.repository.git.Operation.CreateOrUpdateGistOperation;
+import top.wetor.gist.repository.git.Operation.ForkGistOperation;
+import top.wetor.gist.repository.git.Operation.InitRepositoryLayoutOperation;
+import top.wetor.gist.repository.git.Operation.ReadGistOperation;
+import top.wetor.gist.repository.git.Store.CommentStore;
+import top.wetor.gist.repository.git.Store.MetadataStore;
 
 import java.io.File;
 import java.io.Serializable;
@@ -24,7 +32,7 @@ public class GitGistRepository implements GistRepository, Serializable {
 
     private static final Logger logger = LoggerFactory.getLogger(GitGistRepository.class);
 
-    static final String B64_BINARY_EXTENSION = "b64";
+    public static final String B64_BINARY_EXTENSION = "b64";
 
     private GistOperationFactory gistOperationFactory;
 
@@ -104,6 +112,11 @@ public class GitGistRepository implements GistRepository, Serializable {
     @Override
     public GistCommentRepository getCommentRepository() {
         return new GitGistCommentRepository(this.layout.getCommentsFile(), this.commentStore);
+    }
+
+    @Override
+    public GistCommitRepository getCommitRepository() {
+        return new GitGistCommitRepository(this.layout, this.getId());
     }
 
     private void saveMetadata(GistMetadata metadata) {

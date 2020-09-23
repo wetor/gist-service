@@ -4,7 +4,7 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Operation;
 
 import top.wetor.gist.repository.GistError;
 import top.wetor.gist.repository.GistErrorCode;
@@ -14,6 +14,7 @@ import org.ajoberstar.grgit.operation.InitOp;
 import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.wetor.gist.repository.git.RepositoryLayout;
 
 import java.io.File;
 import java.io.IOException;

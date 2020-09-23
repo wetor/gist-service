@@ -4,12 +4,16 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Cache;
 
-import java.io.File;
+import top.wetor.gist.model.GistHistory;
 
-public interface RepositoryStorageLocator {
+import java.util.List;
 
-	File getStoragePath(String gistId);
+public interface HistoryCache {
+
+	public List<GistHistory> load(String commitId);
+
+	public List<GistHistory> save(String commitId, List<GistHistory> history);
 
 }

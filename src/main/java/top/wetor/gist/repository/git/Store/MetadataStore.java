@@ -4,14 +4,16 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Store;
 
-import top.wetor.gist.model.FileContent;
+import top.wetor.gist.repository.git.GistMetadata;
 
-public interface FileContentCache {
+import java.io.File;
 
-	FileContent load(String contentId, String path);
+public interface MetadataStore {
 
-	FileContent save(String contentId, String path, FileContent content);
+	GistMetadata load(File store);
+
+	GistMetadata save(File store, GistMetadata metadata);
 
 }

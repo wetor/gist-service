@@ -19,6 +19,7 @@ import org.apache.commons.collections4.Predicate;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import top.wetor.gist.repository.git.Store.CommentStore;
 
 import java.io.File;
 import java.io.Serializable;

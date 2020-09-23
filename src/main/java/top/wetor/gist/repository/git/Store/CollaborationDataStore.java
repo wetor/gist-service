@@ -1,4 +1,4 @@
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Store;
 
 import java.util.*;
 

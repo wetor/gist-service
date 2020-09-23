@@ -4,14 +4,17 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.repository.git.Store;
+
+import top.wetor.gist.model.GistCommentResponse;
 
 import java.io.File;
+import java.util.List;
 
-public interface MetadataStore {
+public interface CommentStore {
 
-	GistMetadata load(File store);
+	List<GistCommentResponse> load(File store);
 
-	GistMetadata save(File store, GistMetadata metadata);
+	List<GistCommentResponse> save(File store, List<GistCommentResponse> comments);
 
 }
