@@ -4,11 +4,15 @@
 * SPDX-License-Identifier:   MIT
 *
 *******************************************************************************/
-package top.wetor.gist.repository.git;
+package top.wetor.gist.model;
 
 import com.fasterxml.jackson.annotation.*;
-import top.wetor.gist.model.Fork;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.fasterxml.jackson.datatype.joda.deser.DateTimeDeserializer;
+import com.fasterxml.jackson.datatype.joda.ser.DateTimeSerializer;
 import org.joda.time.DateTime;
+import top.wetor.gist.model.Fork;
 
 import java.io.Serializable;
 import java.util.ArrayList;

@@ -7,6 +7,7 @@
 package top.wetor.gist.repository.git.Store;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.joda.time.DateTime;
 import top.wetor.gist.repository.GistError;
 import top.wetor.gist.repository.GistErrorCode;
 import top.wetor.gist.repository.GistRepositoryError;
@@ -16,7 +17,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 
 import java.io.File;
 import java.io.IOException;
@@ -54,6 +55,7 @@ public class GistMetadataStore implements MetadataStore {
 		if(store.exists()) {
 			try {
 				metadata = objectMapper.readValue(store, GistMetadata.class);
+
 			} catch (IOException e) {
 				GistError error = new GistError(GistErrorCode.ERR_METADATA_NOT_READABLE, "Could not read metadata for this gist");
 				logger.error(error.getFormattedMessage() + " with path {}", store);

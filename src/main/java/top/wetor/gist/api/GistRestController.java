@@ -114,7 +114,7 @@ public class GistRestController {
     @Cacheable(value = "commits", key = "{ #gistId}")
     public List<GistHistory> getCommits(@PathVariable("gistId") String gistId, User activeUser){
 
-        return new ArrayList<GistHistory>();
+        return repository.getCommits(gistId, activeUser);
     }
     /**
      * 获取两个commit的diff
@@ -125,9 +125,8 @@ public class GistRestController {
      */
     @RequestMapping(value = "/{gistId}/diff", method = RequestMethod.GET)
     @Cacheable(value = "gists", key = "{ #gistId, #newCommitId, #oldCommitId}")
-    public String getCommitDiff(@PathVariable("gistId") String gistId,String newCommitId,String oldCommitId){
-
-        return "";
+    public GistDiff getCommitDiff(@PathVariable("gistId") String gistId,String newCommitId,String oldCommitId){
+        return repository.getDiff(gistId,oldCommitId,newCommitId);
     }
     /**
      * 需要登录。创建gist

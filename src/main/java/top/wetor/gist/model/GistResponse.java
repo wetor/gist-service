@@ -14,7 +14,7 @@ import java.util.*;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonPropertyOrder({ "url", "forks_url", "commits_url", "id", "description", "public", "owner", "user", "collaborators",
-        "files", "truncated", "fork_of", "comments", "comments_url", "created_at", "updated_at", "history" })
+        "files", "truncated", "fork_of", "comments", "comments_url", "created_at", "updated_at"})
 public class GistResponse implements Serializable {
 
     @JsonProperty("url")
@@ -49,8 +49,8 @@ public class GistResponse implements Serializable {
     private DateTime createdAt;
     @JsonProperty("updated_at")
     private DateTime updatedAt;
-    @JsonProperty("history")
-    private List<GistHistory> history = new ArrayList<>();
+    //@JsonProperty("history")
+    //private List<GistHistory> history = new ArrayList<>();
 
     @JsonIgnore
     private Map<String, Object> additionalProperties = new HashMap<String, Object>();
@@ -206,15 +206,15 @@ public class GistResponse implements Serializable {
         this.updatedAt = updatedAt;
     }
 
-    @JsonProperty("history")
-    public List<GistHistory> getHistory() {
-        return history;
-    }
-
-    @JsonProperty("history")
-    public void setHistory(List<GistHistory> history) {
-        this.history = history;
-    }
+//    @JsonProperty("history")
+//    public List<GistHistory> getHistory() {
+//        return history;
+//    }
+//
+//    @JsonProperty("history")
+//    public void setHistory(List<GistHistory> history) {
+//        this.history = history;
+//    }
 
     @JsonProperty("fork_of")
     public Fork getForkOf() {
@@ -255,7 +255,7 @@ public class GistResponse implements Serializable {
         result = prime * result + ((files == null) ? 0 : files.hashCode());
         result = prime * result + ((forkOf == null) ? 0 : forkOf.hashCode());
         result = prime * result + ((forksUrl == null) ? 0 : forksUrl.hashCode());
-        result = prime * result + ((history == null) ? 0 : history.hashCode());
+        //result = prime * result + ((history == null) ? 0 : history.hashCode());
         result = prime * result + ((id == null) ? 0 : id.hashCode());
         result = prime * result + ((owner == null) ? 0 : owner.hashCode());
         result = prime * result + ((truncated == null) ? 0 : truncated.hashCode());
@@ -329,11 +329,11 @@ public class GistResponse implements Serializable {
                 return false;
         } else if (!forksUrl.equals(other.forksUrl))
             return false;
-        if (history == null) {
-            if (other.history != null)
-                return false;
-        } else if (!history.equals(other.history))
-            return false;
+//        if (history == null) {
+//            if (other.history != null)
+//                return false;
+//        } else if (!history.equals(other.history))
+//            return false;
         if (id == null) {
             if (other.id != null)
                 return false;
@@ -369,12 +369,25 @@ public class GistResponse implements Serializable {
 
     @Override
     public String toString() {
-        return "GistResponse [url=" + url + ", commitsUrl=" + commitsUrl + ", forksUrl=" + forksUrl + ", id=" + id
-                + ", description=" + description + ", _public=" + _public + ", owner=" + owner + ", user=" + user
-                + ", collaborators=" + collaborators + ", files=" + files + ", forkOf=" + forkOf + ", truncated="
-                + truncated + ", comments=" + comments + ", commentsUrl=" + commentsUrl + ", createdAt=" + createdAt
-                + ", updatedAt=" + updatedAt + ", history=" + history + ", additionalProperties=" + additionalProperties
-                + "]";
+        return "GistResponse{" +
+                "url='" + url + '\'' +
+                ", commitsUrl='" + commitsUrl + '\'' +
+                ", forksUrl='" + forksUrl + '\'' +
+                ", id='" + id + '\'' +
+                ", description='" + description + '\'' +
+                ", _public=" + _public +
+                ", owner=" + owner +
+                ", user=" + user +
+                ", collaborators=" + collaborators +
+                ", files=" + files +
+                ", forkOf=" + forkOf +
+                ", truncated=" + truncated +
+                ", comments=" + comments +
+                ", commentsUrl='" + commentsUrl + '\'' +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", additionalProperties=" + additionalProperties +
+                '}';
     }
 
 }

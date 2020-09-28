@@ -9,7 +9,7 @@ package top.wetor.gist.repository.security;
 import top.wetor.gist.model.User;
 import top.wetor.gist.repository.GistRepository;
 import top.wetor.gist.repository.GistSecurityManager;
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 
 import java.util.Arrays;
 import java.util.HashSet;

@@ -1,4 +1,4 @@
-package top.wetor.gist.repository;
+package top.wetor.gist.repository.git;
 
 import org.ajoberstar.grgit.CommitDiff;
 import org.eclipse.jgit.api.Git;
@@ -13,13 +13,14 @@ import org.eclipse.jgit.revwalk.RevWalk;
 import org.eclipse.jgit.treewalk.AbstractTreeIterator;
 import org.eclipse.jgit.treewalk.CanonicalTreeParser;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.util.List;
 import java.util.concurrent.Callable;
 
-public class GistDiff{
+public class GitGistDiffUtils {
 
     public static String diffCommit(Repository repository,String oldCommitId,String newCommitId) {
         try {
@@ -33,25 +34,13 @@ public class GistDiff{
                                 entry.getOldPath().equals(entry.getNewPath()) ? entry.getNewPath() : entry.getOldPath()
                                         + " -> " + entry.getNewPath()
                         );
-
-                OutputStream output = new OutputStream() {
-                    StringBuilder builder = new StringBuilder();
-
-                    @Override
-                    public void write(int b) throws IOException {
-                        builder.append((char) b);
-                    }
-
-                    public String toString() {
-                        return this.builder.toString();
-                    }
-                };
+                ByteArrayOutputStream output = new ByteArrayOutputStream();
 
                 try (DiffFormatter formatter = new DiffFormatter(output)) {
                     formatter.setRepository(repository);
                     formatter.format(entry);
                 }
-                sb.append("\n").append(output.toString());
+                sb.append("\n").append(output.toString("UTF-8"));
             }
             return sb.toString();
         } catch (IOException e) {

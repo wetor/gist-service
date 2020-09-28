@@ -6,10 +6,7 @@
 *******************************************************************************/
 package top.wetor.gist.repository.git;
 
-import top.wetor.gist.model.Fork;
-import top.wetor.gist.model.GistRequest;
-import top.wetor.gist.model.GistResponse;
-import top.wetor.gist.model.User;
+import top.wetor.gist.model.*;
 import top.wetor.gist.repository.GistCommentRepository;
 import top.wetor.gist.repository.GistCommitRepository;
 import top.wetor.gist.repository.GistRepository;

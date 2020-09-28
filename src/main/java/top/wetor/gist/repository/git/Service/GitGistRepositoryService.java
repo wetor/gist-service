@@ -6,8 +6,12 @@
 *******************************************************************************/
 package top.wetor.gist.repository.git.Service;
 
+import org.ajoberstar.grgit.Grgit;
+import org.ajoberstar.grgit.operation.OpenOp;
+import org.eclipse.jgit.lib.Repository;
 import top.wetor.gist.CustomLock;
 import top.wetor.gist.model.*;
+import top.wetor.gist.model.GistDiff;
 import top.wetor.gist.repository.*;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.filefilter.FileFileFilter;
@@ -18,6 +22,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import top.wetor.gist.repository.git.*;
+import top.wetor.gist.repository.git.Operation.InitRepositoryLayoutOperation;
 import top.wetor.gist.repository.git.StorageLocator.AsymetricFourFolderRepositoryStorageLocator;
 import top.wetor.gist.repository.git.StorageLocator.RepositoryStorageLocator;
 import top.wetor.gist.repository.git.StorageLocator.SymetricFourPartRepositoryStorageLocator;
@@ -305,49 +310,20 @@ public class GitGistRepositoryService implements GistRepositoryService {
     }
 
     @Override
-    public String getDiff(String gistId,String oldCommitId,String newCommitId){
-        return "";
-//        try {
-//            File repositoryFolder = getAndValidateRepositoryFolder(gistId);
-//            GistRepository repository = repositoryFactory.getRepository(repositoryFolder);
-//            Git gitCommand = new Git(repository);
-//            List<DiffEntry> diffEntries = listDiff(repository, gitCommand, oldCommitId, newCommitId);
-//            StringBuilder sb = new StringBuilder();
-//            for (DiffEntry entry : diffEntries) {
-//                sb.append(entry.getChangeType().toString())
-//                        .append(" : ")
-//                        .append(
-//                                entry.getOldPath().equals(entry.getNewPath()) ? entry.getNewPath() : entry.getOldPath()
-//                                        + " -> " + entry.getNewPath()
-//                        );
-//
-//                OutputStream output = new OutputStream() {
-//                    StringBuilder builder = new StringBuilder();
-//
-//                    @Override
-//                    public void write(int b) throws IOException {
-//                        builder.append((char) b);
-//                    }
-//
-//                    public String toString() {
-//                        return this.builder.toString();
-//                    }
-//                };
-//
-//                try (DiffFormatter formatter = new DiffFormatter(output)) {
-//                    formatter.setRepository(repository);
-//                    formatter.format(entry);
-//                }
-//                sb.append("\n").append(output.toString());
-//            }
-//            return sb.toString();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//            return "";
-//        } catch (GitAPIException e) {
-//            e.printStackTrace();
-//            return "";
-//        }
+    public GistDiff getDiff(String gistId, String oldCommitId, String newCommitId){
+        Lock lock = acquireGistLock(gistId);
+        try {
+            File repositoryFolder = getAndValidateRepositoryFolder(gistId);
+            OpenOp openOp = new OpenOp();
+            openOp.setDir(new File(repositoryFolder, RepositoryLayout.GIST_BARE_REPOSITORY_FOLDER));
+            Grgit git = openOp.call();
+            Repository repository = git.getRepository().getJgit().getRepository();
+            GistDiff diff = new GistDiff();
+            diff.setContext(GitGistDiffUtils.diffCommit(repository,oldCommitId,newCommitId));
+            return diff;
+        } finally {
+            lock.unlock();
+        }
     }
 
     private Lock acquireGistLock(String gistId) {

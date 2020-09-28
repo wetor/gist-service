@@ -6,11 +6,10 @@
 *******************************************************************************/
 package top.wetor.gist.repository;
 
-import top.wetor.gist.model.GistHistory;
 import top.wetor.gist.model.GistRequest;
 import top.wetor.gist.model.GistResponse;
 import top.wetor.gist.model.User;
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 
 import java.io.File;
 
@@ -39,6 +38,6 @@ public interface GistRepository {
 	GistCommentRepository getCommentRepository();
 
 	GistCommitRepository getCommitRepository();
-	
+
 	
 }

@@ -23,7 +23,7 @@ import org.eclipse.jgit.api.errors.GitAPIException;
 import org.joda.time.DateTime;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 import top.wetor.gist.repository.git.RepositoryLayout;
 
 import java.io.File;

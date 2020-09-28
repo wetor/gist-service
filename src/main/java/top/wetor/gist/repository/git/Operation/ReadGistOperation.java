@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.util.StringUtils;
 import top.wetor.gist.repository.git.Cache.FileContentCache;
 import top.wetor.gist.repository.git.Cache.HistoryCache;
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 import top.wetor.gist.repository.git.GitGistRepository;
 import top.wetor.gist.repository.git.RepositoryLayout;
 import top.wetor.gist.repository.git.Store.MetadataStore;
@@ -125,14 +125,14 @@ public class ReadGistOperation implements Callable<GistResponse> {
 			GistResponse response = new GistResponse();
 
 			Map<String, FileContent> fileContent = Collections.emptyMap();
-			List<GistHistory> history = Collections.emptyList();
+			//List<GistHistory> history = Collections.emptyList();
 			if(revCommit != null) {
 				fileContent = getFileContent(repository, revCommit);
-				history = getHistory(git, revCommit);
+				//history = getHistory(git, revCommit);
 			}
 			response.setFiles(fileContent);
 			response.setComments(this.commentRepository.getComments(user).size());
-			response.setHistory(history);
+			//response.setHistory(history);
 			applyMetadata(response);
 			return response;
 		} catch (IOException e) {
@@ -227,11 +227,11 @@ public class ReadGistOperation implements Callable<GistResponse> {
 		return metadataStore.load(layout.getMetadataFile());
 	}
 
-	private List<GistHistory> getHistory(Grgit git, RevCommit commit) {
-		GitHistoryOperation historyOperation = new GitHistoryOperation(git, commit.getName());
-		historyOperation.setHistoryCache(historyCache);
-		return historyOperation.call();
-	}
+//	private List<GistHistory> getHistory(Grgit git, RevCommit commit) {
+//		GitHistoryOperation historyOperation = new GitHistoryOperation(git, commit.getName());
+//		historyOperation.setHistoryCache(historyCache);
+//		return historyOperation.call();
+//	}
 
 	public User getUser() {
 		return user;

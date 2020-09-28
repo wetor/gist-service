@@ -6,7 +6,7 @@
 *******************************************************************************/
 package top.wetor.gist.repository.git.Store;
 
-import top.wetor.gist.repository.git.GistMetadata;
+import top.wetor.gist.model.GistMetadata;
 
 import java.io.File;
 

@@ -26,6 +26,18 @@ spring:
   cloud:
     config:
       enabled: false
+  redis:
+    port: 6379
+    database: 0
+    host: 127.0.0.1
+    password: 123456
+    jedis:
+      pool:
+        max-active: 8
+        max-wait: 10ms
+        max-idle: 8
+        min-idle: 0
+    timeout: 5000ms
 
 
 gists:

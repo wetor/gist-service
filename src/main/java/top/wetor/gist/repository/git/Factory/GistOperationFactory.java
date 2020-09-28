@@ -7,6 +7,7 @@
 package top.wetor.gist.repository.git.Factory;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.springframework.beans.factory.annotation.Qualifier;
 import top.wetor.gist.model.FileContent;
 import top.wetor.gist.model.GistHistory;
 import top.wetor.gist.model.GistRequest;
