@@ -22,8 +22,14 @@ import java.util.concurrent.Callable;
 
 public class GitGistDiffUtils {
 
-    public static String diffCommit(Repository repository,String oldCommitId,String newCommitId) {
+    public static String diffCommit(Repository repository,String newCommitId, String oldCommitId) {
         try {
+            if(oldCommitId == null){
+                oldCommitId = getPrevHash(repository, newCommitId);
+                if(oldCommitId == null){
+                    return "";
+                }
+            }
             Git gitCommand = new Git(repository);
             List<DiffEntry> diffEntries = listDiff(repository, gitCommand, oldCommitId, newCommitId);
             StringBuilder sb = new StringBuilder();
@@ -82,4 +88,25 @@ public class GitGistDiffUtils {
             return treeParser;
         }
     }
+
+    // https://blog.csdn.net/qysh123/article/details/102473291
+    public static String getPrevHash(Repository repo, String commitId)  throws  IOException {
+        try (RevWalk walk = new RevWalk(repo)) {
+            RevCommit commit =walk.parseCommit(repo.resolve(commitId));
+            // Starting point
+            walk.markStart(commit);
+            int count = 0;
+            for (RevCommit rev : walk) {
+                // got the previous commit.
+                if (count == 1) {
+                    return rev.getName();
+                }
+                count++;
+            }
+            walk.dispose();
+        }
+        //Reached end and no previous commits.
+        return null;
+    }
+
 }

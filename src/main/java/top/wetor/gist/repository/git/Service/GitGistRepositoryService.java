@@ -6,7 +6,9 @@
 *******************************************************************************/
 package top.wetor.gist.repository.git.Service;
 
+import org.ajoberstar.grgit.Commit;
 import org.ajoberstar.grgit.Grgit;
+import org.ajoberstar.grgit.operation.LogOp;
 import org.ajoberstar.grgit.operation.OpenOp;
 import org.eclipse.jgit.lib.Repository;
 import top.wetor.gist.CustomLock;
@@ -310,7 +312,7 @@ public class GitGistRepositoryService implements GistRepositoryService {
     }
 
     @Override
-    public GistDiff getDiff(String gistId, String oldCommitId, String newCommitId){
+    public GistDiff getDiff(String gistId, String newCommitId, String oldCommitId){
         Lock lock = acquireGistLock(gistId);
         try {
             File repositoryFolder = getAndValidateRepositoryFolder(gistId);
@@ -319,12 +321,14 @@ public class GitGistRepositoryService implements GistRepositoryService {
             Grgit git = openOp.call();
             Repository repository = git.getRepository().getJgit().getRepository();
             GistDiff diff = new GistDiff();
-            diff.setContext(GitGistDiffUtils.diffCommit(repository,oldCommitId,newCommitId));
+            diff.setContext(GitGistDiffUtils.diffCommit(repository,newCommitId,oldCommitId));
             return diff;
         } finally {
             lock.unlock();
         }
     }
+
+
 
     private Lock acquireGistLock(String gistId) {
         Lock lock = new CustomLock();

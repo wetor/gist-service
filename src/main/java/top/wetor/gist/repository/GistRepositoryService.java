@@ -44,6 +44,6 @@ public interface GistRepositoryService {
 	
 	public List<Fork> getForks(String gistId, User activeUser);
 
-	public GistDiff getDiff(String gistId, String oldCommitId, String newCommitId);
+	public GistDiff getDiff(String gistId, String newCommitId, String oldCommitId);
 
 }

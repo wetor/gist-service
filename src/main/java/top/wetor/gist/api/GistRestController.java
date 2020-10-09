@@ -124,9 +124,20 @@ public class GistRestController {
      * @return diff
      */
     @RequestMapping(value = "/{gistId}/diff", method = RequestMethod.GET)
-    @Cacheable(value = "gists", key = "{ #gistId, #newCommitId, #oldCommitId}")
+    @Cacheable(value = "commit", key = "{ #gistId, #newCommitId, #oldCommitId}")
     public GistDiff getCommitDiff(@PathVariable("gistId") String gistId,String newCommitId,String oldCommitId){
-        return repository.getDiff(gistId,oldCommitId,newCommitId);
+        return repository.getDiff(gistId,newCommitId,oldCommitId);
+    }
+    /**
+     * 获取当前commit的内容
+     * @param gistId gistId
+     * @param commitId commitId
+     * @return diff
+     */
+    @RequestMapping(value = "/{gistId}/commit/{commitId}", method = RequestMethod.GET)
+    @Cacheable(value = "commit", key = "{ #gistId, #commitId}")
+    public GistDiff getCommitDiff(@PathVariable("gistId") String gistId,@PathVariable("commitId") String commitId){
+        return repository.getDiff(gistId, commitId, null);
     }
     /**
      * 需要登录。创建gist
@@ -139,8 +150,6 @@ public class GistRestController {
     //@PreAuthorize(USER_ROLE_AUTHORITY)
     @ResponseStatus(HttpStatus.CREATED)
     public GistResponse createGist(@RequestBody GistRequest request, HttpServletRequest httpRequest, User activeUser) {
-
-
         GistResponse response = repository.createGist(request, activeUser);
         decorateGistResponse(response, activeUser);
         return response;
