@@ -5,4 +5,4 @@ Fork自https://github.com/att/rcloud-gist-services
 - 删除原有的权限验证、锁（用空白锁代替），后续会添加权限相关
 - 缓存使用redis
 - 增加原rcloud-gist-services没有的获取commits列表和比较commit差异（diff）的API
-- 前端将采用https://github.com/GitHub-Laziji/VBlog的Fork仓库https://github.com/wetor/VBlog
+- 前端将采用https://github.com/GitHub-Laziji/VBlog 的Fork仓库 https://github.com/wetor/VBlog
